@@ -1,0 +1,103 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { projects, type Project } from "../../data/projects.ts";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+
+const vimeoSrc = project.vimeoId
+  ? `https://player.vimeo.com/video/${project.vimeoId}?dnt=1`
+  : null;
+---
+
+<Layout title={project.title} description={project.synopsis ?? `${project.title} — cinematography by German Valle`}>
+  <article class="pt-24">
+    <!-- Project hero: large embedded clip -->
+    {vimeoSrc && (
+      <div class="w-full bg-black">
+        <div class="mx-auto max-w-[1800px] aspect-video">
+          <iframe
+            class="w-full h-full"
+            src={vimeoSrc}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            title={project.title}
+          ></iframe>
+        </div>
+      </div>
+    )}
+
+    <!-- Title + credits block -->
+    <header class="mx-auto max-w-[1200px] px-6 md:px-10 pt-16 pb-12 md:pt-24">
+      <p class="smallcaps text-xs text-[color:var(--color-accent-400)] mb-3">
+        {project.category} · {project.year}
+      </p>
+      <h1 class="font-serif text-5xl md:text-7xl text-[color:var(--color-text-display)] tracking-tight leading-[0.95] mb-10">
+        {project.title}
+      </h1>
+
+      <dl class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 max-w-3xl">
+        <div>
+          <dt class="smallcaps text-xs text-[color:var(--color-text-faint)] mb-1">Role</dt>
+          <dd class="text-[color:var(--color-text-primary)]">{project.role}</dd>
+        </div>
+        {project.director && (
+          <div>
+            <dt class="smallcaps text-xs text-[color:var(--color-text-faint)] mb-1">Director</dt>
+            <dd class="text-[color:var(--color-text-primary)]">{project.director}</dd>
+          </div>
+        )}
+        {project.studio && (
+          <div>
+            <dt class="smallcaps text-xs text-[color:var(--color-text-faint)] mb-1">Studio</dt>
+            <dd class="text-[color:var(--color-text-primary)]">{project.studio}</dd>
+          </div>
+        )}
+        {project.format && (
+          <div>
+            <dt class="smallcaps text-xs text-[color:var(--color-text-faint)] mb-1">Format</dt>
+            <dd class="text-[color:var(--color-text-primary)]">{project.format}</dd>
+          </div>
+        )}
+      </dl>
+
+      {project.synopsis && (
+        <p class="mt-10 text-lg md:text-xl text-[color:var(--color-text-muted)] max-w-3xl leading-relaxed">
+          {project.synopsis}
+        </p>
+      )}
+    </header>
+
+    <!-- Stills strip -->
+    {project.stills && project.stills.length > 0 && (
+      <section class="mx-auto max-w-[1600px] px-6 md:px-10 pb-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {project.stills.map((src) => (
+            <img
+              src={src}
+              alt=""
+              loading="lazy"
+              class="w-full aspect-[16/9] object-cover bg-[color:var(--color-bg-elevated)]"
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Back to work -->
+    <div class="mx-auto max-w-[1200px] px-6 md:px-10 pb-32">
+      <a href="/work" class="smallcaps text-xs text-[color:var(--color-text-muted)] hover:text-[color:var(--color-accent-400)]">
+        ← Back to all work
+      </a>
+    </div>
+  </article>
+</Layout>

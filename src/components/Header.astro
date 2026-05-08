@@ -1,0 +1,52 @@
+---
+import { SITE_NAME } from "../config.ts";
+
+interface Props {
+  transparent?: boolean;
+}
+const { transparent = false } = Astro.props;
+
+const navItems = [
+  { href: "/work", label: "Work" },
+  { href: "/photography", label: "Photography" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  class:list={[
+    "fixed top-0 inset-x-0 z-40 transition-colors duration-300",
+    transparent
+      ? "bg-transparent"
+      : "bg-[color:var(--color-bg-primary)]/85 backdrop-blur-md border-b border-[color:var(--color-border-subtle)]",
+  ]}
+>
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10 py-5 flex items-center justify-between gap-8">
+    <a href="/" class="smallcaps text-sm md:text-base text-[color:var(--color-text-display)] hover:text-[color:var(--color-accent-400)] transition-colors">
+      {SITE_NAME}
+    </a>
+    <nav class="hidden md:flex items-center gap-10">
+      {
+        navItems.map(({ href, label }) => {
+          const isActive = currentPath === href || (href !== "/" && currentPath.startsWith(href));
+          return (
+            <a
+              href={href}
+              class:list={[
+                "smallcaps text-xs transition-colors",
+                isActive
+                  ? "text-[color:var(--color-accent-400)]"
+                  : "text-[color:var(--color-text-muted)] hover:text-[color:var(--color-text-display)]",
+              ]}
+            >
+              {label}
+            </a>
+          );
+        })
+      }
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ReelHero from "../components/ReelHero.astro";
+import ProjectTile from "../components/ProjectTile.astro";
+import { REEL_VIMEO_ID, SITE_NAME } from "../config.ts";
+import { featuredProjects } from "../data/projects.ts";
+
+const projects = featuredProjects();
+---
+
+<Layout title={SITE_NAME} transparentHeader={true}>
+  <ReelHero vimeoId={REEL_VIMEO_ID} tagline="Selected work · 2020 — present" />
+
+  <!-- SELECTED WORK GRID -->
+  <section id="work" class="mx-auto max-w-[1600px] px-6 md:px-10 py-24 md:py-32">
+    <div class="flex items-end justify-between mb-12 md:mb-16">
+      <div>
+        <p class="smallcaps text-xs text-[color:var(--color-accent-400)] mb-3">
+          Selected work
+        </p>
+        <h2 class="font-serif text-4xl md:text-6xl text-[color:var(--color-text-display)] tracking-tight">
+          Recent projects.
+        </h2>
+      </div>
+      <a href="/work" class="hidden md:inline-block smallcaps text-xs text-[color:var(--color-text-muted)] hover:text-[color:var(--color-accent-400)] transition-colors">
+        View all →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      {projects.map((project) => <ProjectTile project={project} />)}
+    </div>
+
+    <div class="mt-12 md:hidden">
+      <a href="/work" class="smallcaps text-xs text-[color:var(--color-text-muted)] hover:text-[color:var(--color-accent-400)] transition-colors">
+        View all →
+      </a>
+    </div>
+  </section>
+</Layout>

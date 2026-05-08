@@ -1,0 +1,11 @@
+# Cloudflare Pages reads this file to set HTTP response headers.
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Allow Vimeo to embed our pages? No — but our iframes embed Vimeo, which is fine.
+# X-Frame-Options intentionally omitted so we don't conflict with Vimeo's embed rules.

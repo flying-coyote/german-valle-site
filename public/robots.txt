@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://germanvalle.com/sitemap-index.xml

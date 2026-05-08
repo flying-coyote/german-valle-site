@@ -1,0 +1,54 @@
+---
+import { SITE_NAME, AGENT_NAME, AGENT_AGENCY, AGENT_EMAIL, IMDB_URL, VIMEO_PROFILE_URL, INSTAGRAM_URL } from "../config.ts";
+
+const year = new Date().getFullYear();
+const externalLinks = [
+  IMDB_URL && { href: IMDB_URL, label: "IMDb" },
+  VIMEO_PROFILE_URL && { href: VIMEO_PROFILE_URL, label: "Vimeo" },
+  INSTAGRAM_URL && { href: INSTAGRAM_URL, label: "Instagram" },
+].filter(Boolean) as Array<{ href: string; label: string }>;
+---
+
+<footer class="mt-32 border-t border-[color:var(--color-border-subtle)]">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+      <div>
+        <p class="smallcaps text-xs text-[color:var(--color-text-muted)] mb-3">Representation</p>
+        <p class="text-[color:var(--color-text-primary)]">{AGENT_NAME}</p>
+        <p class="text-sm text-[color:var(--color-text-muted)]">{AGENT_AGENCY}</p>
+        <a href={`mailto:${AGENT_EMAIL}`} class="text-sm text-[color:var(--color-text-muted)] hover:text-[color:var(--color-accent-400)]">
+          {AGENT_EMAIL}
+        </a>
+      </div>
+
+      <div>
+        <p class="smallcaps text-xs text-[color:var(--color-text-muted)] mb-3">Elsewhere</p>
+        <ul class="space-y-1">
+          {externalLinks.map(({ href, label }) => (
+            <li>
+              <a href={href} target="_blank" rel="noopener" class="text-sm text-[color:var(--color-text-primary)] hover:text-[color:var(--color-accent-400)]">
+                {label} <span class="text-[color:var(--color-text-faint)]">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="md:text-right">
+        <p class="smallcaps text-xs text-[color:var(--color-text-muted)] mb-3">{SITE_NAME}</p>
+        <p class="font-serif text-2xl text-[color:var(--color-text-display)] tracking-tight">
+          Director of Photography
+        </p>
+      </div>
+    </div>
+
+    <div class="pt-8 border-t border-[color:var(--color-border-subtle)] flex flex-wrap items-center justify-between gap-4">
+      <p class="text-xs text-[color:var(--color-text-faint)]">
+        © {year} {SITE_NAME}. All rights reserved.
+      </p>
+      <p class="text-xs text-[color:var(--color-text-faint)]">
+        Site design and build · TBD
+      </p>
+    </div>
+  </div>
+</footer>
