@@ -1,31 +1,24 @@
 ---
 import type { Project } from "../data/projects.ts";
+import { parseVideoUrl } from "../utils/video.ts";
 
 interface Props {
   project: Project;
 }
 const { project } = Astro.props;
 const href = `/work/${project.slug}`;
-
-// Vimeo thumbnail fallback if no posterImage is provided.
-// Vimeo's `vumbnail.com` returns an image for any public video ID.
-const poster = project.posterImage ?? (project.vimeoId ? `https://vumbnail.com/${project.vimeoId}.jpg` : undefined);
+const video = parseVideoUrl(project.videoUrl);
+const poster = project.posterImage ?? video.posterUrl;
 ---
 
 <a href={href} class="group block">
   <div class="relative aspect-[16/10] overflow-hidden bg-[color:var(--color-bg-elevated)]">
-    {poster ? (
-      <img
-        src={poster}
-        alt={project.title}
-        loading="lazy"
-        class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-[1.03] group-hover:opacity-90"
-      />
-    ) : (
-      <div class="absolute inset-0 flex items-center justify-center text-[color:var(--color-text-faint)] smallcaps text-xs">
-        {project.category}
-      </div>
-    )}
+    <img
+      src={poster}
+      alt={project.title}
+      loading="lazy"
+      class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-[1.03] group-hover:opacity-90"
+    />
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-100"></div>
     <div class="absolute bottom-0 left-0 right-0 p-5 md:p-6">
       <p class="smallcaps text-xs text-[color:var(--color-accent-400)] mb-1">
