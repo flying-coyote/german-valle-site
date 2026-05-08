@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { projects, type Project } from "../../data/projects.ts";
+import { parseVideoUrl } from "../../utils/video.ts";
 
 export function getStaticPaths() {
   return projects.map((project) => ({
@@ -13,28 +14,23 @@ interface Props {
   project: Project;
 }
 const { project } = Astro.props;
-
-const vimeoSrc = project.vimeoId
-  ? `https://player.vimeo.com/video/${project.vimeoId}?dnt=1`
-  : null;
+const video = parseVideoUrl(project.videoUrl);
 ---
 
 <Layout title={project.title} description={project.synopsis ?? `${project.title} — cinematography by German Valle`}>
   <article class="pt-24">
     <!-- Project hero: large embedded clip -->
-    {vimeoSrc && (
-      <div class="w-full bg-black">
-        <div class="mx-auto max-w-[1800px] aspect-video">
-          <iframe
-            class="w-full h-full"
-            src={vimeoSrc}
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-            title={project.title}
-          ></iframe>
-        </div>
+    <div class="w-full bg-black">
+      <div class="mx-auto max-w-[1800px] aspect-video">
+        <iframe
+          class="w-full h-full"
+          src={video.embedSrc}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          title={project.title}
+        ></iframe>
       </div>
-    )}
+    </div>
 
     <!-- Title + credits block -->
     <header class="mx-auto max-w-[1200px] px-6 md:px-10 pt-16 pb-12 md:pt-24">
