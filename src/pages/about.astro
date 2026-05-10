@@ -1,51 +1,79 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { SITE_NAME, IMDB_URL } from "../config.ts";
+import { SITE_NAME, SITE_LOCATION, IMDB_URL } from "../config.ts";
+import { projects, type Project } from "../data/projects.ts";
+
+const order: Array<Project["category"]> = [
+  "Feature",
+  "Episodic",
+  "Commercial",
+  "Music Video",
+  "Documentary",
+  "Short",
+];
+
+const categoryLabels: Record<Project["category"], string> = {
+  Feature: "Features",
+  Episodic: "Episodic",
+  Commercial: "Commercials",
+  "Music Video": "Music Videos",
+  Documentary: "Documentary",
+  Short: "Short Films",
+};
+
+const grouped = order
+  .map((cat) => ({
+    label: categoryLabels[cat],
+    items: projects
+      .filter((p) => p.category === cat)
+      .sort((a, b) => b.year - a.year),
+  }))
+  .filter((g) => g.items.length > 0);
 ---
 
-<Layout title="About" description={`About ${SITE_NAME}, Director of Photography.`}>
-  <div class="pt-32 md:pt-40 pb-24 mx-auto max-w-[1100px] px-6 md:px-10">
+<Layout title="About" description={`Credits and biography for ${SITE_NAME}, Director of Photography.`}>
+  <div class="pt-32 md:pt-40 pb-32 mx-auto max-w-[1100px] px-6 md:px-10">
     <p class="smallcaps text-xs text-[color:var(--color-accent-400)] mb-3">About</p>
-    <h1 class="font-serif text-5xl md:text-7xl text-[color:var(--color-text-display)] tracking-tight mb-12">
-      {SITE_NAME}
+
+    <h1 class="font-serif text-4xl md:text-6xl text-[color:var(--color-text-display)] tracking-tight leading-[1.05] mb-16 max-w-[20ch]">
+      {SITE_NAME} is a Director of Photography based in {SITE_LOCATION}.
     </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-12 md:gap-16">
-      <div class="aspect-[3/4] bg-[color:var(--color-bg-elevated)] flex items-center justify-center">
-        <span class="smallcaps text-xs text-[color:var(--color-text-faint)]">Headshot · TBD</span>
-      </div>
-
-      <div class="prose-cinema">
-        <p class="text-xl md:text-2xl text-[color:var(--color-text-display)] font-serif leading-snug mb-8">
-          German Valle is a Director of Photography based in Los Angeles.
-        </p>
-
-        <p class="text-[color:var(--color-text-muted)] leading-relaxed mb-6">
-          Recent credits include cinematography on Tyler Perry's <em>Zatima</em> and <em>House of Payne</em>,
-          <em>Young Dylan</em> for Nickelodeon, <em>Curveball</em> on ALLBLK, <em>Sincerely Love</em>
-          for In The Black Network, <em>Not My Family: The Monique Smith Story</em> on Lifetime,
-          and the 2025 feature <em>Blue Devils</em>.
-        </p>
-
-        <p class="text-[color:var(--color-text-muted)] leading-relaxed mb-6">
-          Before working as DP, German spent years as a gaffer on studio productions across features
-          and episodic television.
-        </p>
-
-        <p class="text-[color:var(--color-text-faint)] text-sm italic mb-6">
-          [Draft bio — to expand or rewrite. Replace this paragraph.]
-        </p>
-
-        <div class="mt-12 pt-8 border-t border-[color:var(--color-border-subtle)]">
-          <p class="smallcaps text-xs text-[color:var(--color-text-muted)] mb-3">Credits</p>
-          <p class="text-[color:var(--color-text-muted)]">
-            Full filmography on{" "}
-            <a href={IMDB_URL} target="_blank" rel="noopener" class="text-[color:var(--color-text-primary)] hover:text-[color:var(--color-accent-400)]">
-              IMDb ↗
-            </a>
-          </p>
+    <section class="space-y-16">
+      {grouped.map(({ label, items }) => (
+        <div>
+          <h2 class="smallcaps text-xs text-[color:var(--color-text-muted)] mb-6 pb-3 border-b border-[color:var(--color-border-subtle)]">
+            {label}
+          </h2>
+          <ul class="divide-y divide-[color:var(--color-border-subtle)]">
+            {items.map((p) => (
+              <li class="grid grid-cols-[1fr_auto_5rem] gap-x-6 py-4 items-baseline">
+                <a
+                  href={`/work/${p.slug}`}
+                  class="font-serif text-lg md:text-xl text-[color:var(--color-text-display)] hover:text-[color:var(--color-accent-400)] transition-colors"
+                >
+                  {p.title}
+                </a>
+                <span class="text-sm text-[color:var(--color-text-muted)] hidden md:inline">
+                  {p.studio ?? ""}
+                </span>
+                <span class="smallcaps text-xs text-[color:var(--color-text-faint)] text-right tabular-nums">
+                  {p.year}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
+      ))}
+    </section>
+
+    <div class="mt-20 pt-8 border-t border-[color:var(--color-border-subtle)]">
+      <p class="text-[color:var(--color-text-muted)]">
+        Full filmography on{" "}
+        <a href={IMDB_URL} target="_blank" rel="noopener" class="text-[color:var(--color-text-primary)] hover:text-[color:var(--color-accent-400)]">
+          IMDb ↗
+        </a>
+      </p>
     </div>
   </div>
 </Layout>
